@@ -17,7 +17,7 @@ import 'package:mbttms/models/trips_models.dart';
 
 
 Flights flights;
-Hotels hotels;
+Hotel hotels;
 Cars cars;
 Trips trips;
 Homes home;
@@ -88,6 +88,47 @@ List list3() {
     ];
 
   return routes2;
+}
+
+List list4() {
+  List<Text> names;
+
+  names = [
+     Text ( 
+                    'Flights',
+                    style: TextStyle(
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black45,
+                    )
+                  ),
+                  Text ( 
+                    '  Hotels',
+                    style: TextStyle(
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black45,
+                    )
+                  ),
+                  Text ( 
+                    'Car Hire',
+                    style: TextStyle(
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black45,
+                    )
+                  ),
+                  Text ( 
+                    'Explore',
+                    style: TextStyle(
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black45,
+                    )
+                  )
+  ];
+
+  return names;
 }
 
 /*Widget buildIcon(int index, List icons, List routes, int _selectedIndex, BuildContext context ) {

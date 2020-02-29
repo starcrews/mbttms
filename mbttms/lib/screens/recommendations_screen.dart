@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mbttms/models/recommendations_model.dart';
 import 'package:mbttms/widgets/recommendations_carousel.dart';
+import 'package:mbttms/widgets/hotel_carousel.dart';
 import 'package:mbttms/widgets/custom_widgets.dart';
 
 class RecommendationsScreen extends StatefulWidget {
@@ -13,7 +14,7 @@ class RecommendationsScreen extends StatefulWidget {
 }
 
 class _RecommendationsScreenState extends State<RecommendationsScreen> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 3;
   int _currentTab = 0;
 
   List icons = list1();
@@ -45,9 +46,7 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
         child: Icon(
           icons[index],
           size: 25.0,
-          color: _selectedIndex == index 
-            ? Colors.redAccent
-            : Color(0xFFB4C1C4),
+          color: Colors.redAccent
         ),
       ),  
     );
@@ -82,8 +81,18 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
                   (MapEntry map) => _buildIcon(map.key),
                 ).toList(),
             ),
+            SizedBox(height: 5.0),
+            Padding(
+              padding: EdgeInsets.only(left: 26.0, right: 22.0),
+              child: Row( 
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: list4(),
+              ),
+            ),
             SizedBox(height: 20.0),
             RecommendationsCarousel(),
+            SizedBox(height: 20.0),
+            HotelCarousel(),
           ],
         ),
       ),

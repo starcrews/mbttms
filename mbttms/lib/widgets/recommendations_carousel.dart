@@ -22,23 +22,11 @@ class RecommendationsCarousel extends StatelessWidget {
                 letterSpacing: 1.5,
               ),
             ),
-            GestureDetector( 
-              onTap: () => print('See All'),
-              child: Text(
-                'See All', 
-                style: TextStyle( 
-                  color: Theme.of(context).primaryColor,
-                  fontSize: 16.0, 
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 1.0,
-                ),
-              ),
-            ),
           ],
         ),
       ),
       Container( 
-        height: 300.0,
+        height: 305.0,
         child: ListView.builder( 
           scrollDirection: Axis.horizontal,
           itemCount: recommendations.length,
@@ -66,7 +54,6 @@ class RecommendationsCarousel extends StatelessWidget {
                       width: 200.0,
                       decoration: BoxDecoration( 
                         color: Colors.white, 
-                        borderRadius: BorderRadius.circular(10.0),
                       ),
                       child: Padding( 
                         padding: EdgeInsets.all(10.0),
@@ -96,7 +83,6 @@ class RecommendationsCarousel extends StatelessWidget {
                     Container( 
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(20.0),
                         boxShadow: [
                           BoxShadow(
                             color: Colors.black26,
@@ -110,7 +96,6 @@ class RecommendationsCarousel extends StatelessWidget {
                           Hero(
                             tag: recommendation.imageUrl,
                             child: ClipRRect(
-                              borderRadius: BorderRadius.circular(20.0),
                               child: Image( 
                                 height: 180.0, 
                                 width: 180.0,

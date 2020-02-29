@@ -1,6 +1,9 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mbttms/models/flights_model.dart';
 import 'package:mbttms/widgets/custom_widgets.dart';
+import 'package:mbttms/screens/available_flights.dart';
+import 'package:http/http.dart' as http;
 
 class FlightsScreen extends StatefulWidget {
   final Flights flights;
@@ -11,9 +14,90 @@ class FlightsScreen extends StatefulWidget {
   _FlightsScreenState createState() => _FlightsScreenState();
 }
 
+String selectedItem = "";
+
 class _FlightsScreenState extends State<FlightsScreen> {
-  int _selectedIndex = 1;
+  final String url = 'https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browseroutes/v1.0/NG/NGN/en/LOS-sky/JFK-sky/2020-02-24/2020-03-06';
+  final formKey = GlobalKey<FormState>();
+  String currency = "", country = "", locale = "en", origin = "", destination = "", departure = "", arrival = "";
+  String data;
+  List<String> _country = [ "","AD","AE","AF","AG","AI","AL","AM","AO","AQ","AR","AS","AT","AU","AW","AZ","BA","BB","BD","BE","BF","BG","BH","BI","BJ","BL","BM","BN",
+                            "BO","BQ","BR","BS","BT","BW","BY","BZ","CA","CC","CD","CF","CG","CH","CI","CK","CL","CM","CN","CO","CR","CU","CV","CW","CX","CY","CZ",
+                            "DE","DJ","DK","DM","DO","DZ","EC","EE","EG","ER","ES","ET","FI","FJ","FK","FM","FO","FR","GA","GD","GE","GF","GG","GH","GI","GL","GM",
+                            "GN","GP","GQ","GR","GS","GT","GU","GW","GY","HK","HN","HR","HT","HU","ID","IE","IL","IN","IQ","IR","IS","IT","JM","JO","JP","KE","KG",
+                            "KH","KI","KM","KN","KO","KP","KR","KW","KY","KZ","LA","LB","LC","LI","LK","LR","LS","LT","LU","LV","LY","MA","MC","MD","ME","MG","MH",
+                            "MK","ML","MM","MN","MO","MP","MQ","MR","MS","MT","MU","MV","MW","MX","MY","MZ","NA","NC","NE","NG","NI","NL","NO","NP","NR","NU","NZ",
+                            "OM","PA","PE","PF","PG","PH","PL","PM","PR","PT","PW","PY","QA","RE","RO","RS","RU","RW","SA","SB","SC","SD","SE","SG","SH","SI","SK",
+                            "SL","SN","SO","SR","SS","ST","SV","SX","SY","SZ","TC","TD","TG","TH","TJ","TL","TM","TN","TO","TR","TT","TV","TW","TZ","UA","UG","UK",
+                            "US","UY","UZ","VA","VC","VE","VG","VI","VN","VU","WF","WS","YE","YT","ZA","ZM","ZW"];
+
+
+  List<String> _cities = [ "Abidjan","Abu Dhabi","Abuja","Accra","Addis Ababa","Alexandria","Alexandria Borg El Arab","Algiers","Amsterdam","Ankara","Antananarivo",
+                          "Atlanta","Athens","Auckland","Baghdad","Bamako","Bangkok","Barcelona","Beijing Capital","Beijing Daxing","Beirut","Belo Horizonte","Bengaluru",
+                          "Bogota","Boston","Brasilia","Brazzaville","Brussels International","Brussels S. Charleroi","Bucharest","Buenos Aires","Buenos Aires Jorge Newbery",
+                          "Cape Town","Caracas","Cardiff","Casablanca Mohamed V.","Chengdu","Chiang Mai","Chicago","Chicago O'Hare International","Chicago Midway","Conakry",
+                          "Dallas","Dar Es Salaam","Dhaka","Douala","Dublin","Durban","Edinburgh","Freetown","Frankfurt","Guangzhou","Guayaquil","Hamburg","Hanoi","Havana",
+                          "Harare","Ho Chi Minh","Hong Kong","Hyderabad","Istanbul","Jeddah","Johannesburg","Karachi","Khartoum","Kuala Lumpur International","Kuala Lumpur Sultan Abdul Azziz",
+                          "Kuwait","Kinshasa","Kolkata","Lagos","Lima","Lisbon","London","London Heathrow","London Gatwick","Los Angeles","Luanda","Madrid","Manaus","Manila",
+                          "Marseille","Medellin Enrique Olaya Herrera","Medellin Jose Maria Cordova","Melbourne","Mexico City","Miami","Milan","Milan Linate","Milan Malpensa",
+                          "Mogadishu","Montreal","Moscow Domodedovo","Moscow Sheremetyevo","Moscow Vnukovo","Mumbai","Munich","New Delhi","New York","New York John F. Kennedy",
+                          "New York Newark","New York LaGuardia","Nairobi","Nanjing","Osaka","Osaka Kansai","Ottawa","Ouagadougou","Paris","Paris Charles de Gaulle","Paris Orly",
+                          "Perth","Philadelphia","Port Au Prince","Port Moresby","Port Of Spain","Port Harcourt","Pyongyang","Quito","Rabat","Recife","Rio De Janeiro",
+                          "Rio De Janeiro Internacional","Riyadh","Rome","Rome Ciampino","Rotterdam","San Antonio","San Francisco","San Jose Juan Santamaria","San Jose Tobias Bolanos",
+                          "Santiago","Sao Paulo","Sao Paulo Guarulhos","Seoul Gimpo","Seoul Incheon Int'l","Shanghai Hongqiao","Shanghai Pu Dong","Shenzhen","Sydney","Taipei",
+                          "Tehran","Tianjin","Tokyo Haneda","Tokyo Narita","Toronto","Tripoli","Turin","Vienna","Warsaw Chopin","Warsaw Modlin","Washington","Wuhan","Windhoek",
+                          "Yangon","Yaounde","Zagreb","Zurich"];
+
+  List<String> _cities2 = ["ABJ-sky","AUH-sky","ABV-sky","ACC-sky","ADD-sky","ALEX-sky","HBE-sky","ALG-sky","AMS-sky","ESB-sky","TNR-sky","ATL-sky","ATH-sky","AKL-sky","BGW-sky",
+                          "BKO-sky","BKK-sky","BCN-sky","PEK-sky","PKX-sky","BEY-sky","CNF-sky","BLR-sky","BOG-sky","BOS-sky","BSB-sky","BZV-sky","BRUS-sky","BRU-sky","CRL-sky",
+                          "OTP-sky","BUEA-sky","AEP-sky","CPT-sky","CCS-sky","CMN-sky","CWL-sky","CTU-sky","CNX-sky","CHIA-sky","ORD-sky","MDW-sky","CKY-sky","AFW-sky","DAR-sky",
+                          "DAC-sky","DLA-sky","DUB-sky","DUR-sky","EDI-sky","FNA-sky","FRAN-sky","CAN-sky","GYE-sky","HAM-sky","HAN-sky","HAVA-sky","HRE-sky","SGN-sky","HKG-sky",
+                          "HYD-sky","ISTA-sky","JED-sky","JNB-sky","KHI-sky","KRT-sky","KUL-sky","SZB-sky","KWI-sky","FIH-sky","CCU-sky","LOS-sky","LIM-sky","LIS-sky","LOND-sky",
+                          "LHR-sky","LGW-sky","LAX-sky","LAD-sky","MAD-sky","MAO-sky","MNL-sky","MRS-sky","EOH-sky","MDE-sky","MELA-sky","MEX-sky","MIA-sky","MILA-sky","LIN-sky",
+                          "MXP-sky","MGQ-sky","YUL-sky","DME-sky","SVO-sky","VKO-sky","BOM-sky","MUC-sky","DEL-sky","NYCA-sky","JFK-sky","EWR-sky","LGA-sky","NBO-sky","NKG-sky",
+                          "OSAA-sky","KIX-sky","YOW-sky","OUA-sky","PARI-sky","CDG-sky","ORY-sky","PER-sky","PHL-sky","PAP-sky","POM-sky","POS-sky","PHC-sky","FNJ-sky","UIO-sky",
+                          "RBA-sky","REC-sky","RIOA-sky","GIG-sky","RUH-sky","ROME-sky","CIA-sky","RTM-sky","SAT-sky","SFO-sky","SJO-sky","SYQ-sky","SCL-sky","SAOA-sky","GRU-sky",
+                          "GMP-sky","ICN-sky","SHA-sky","PVG-sky","SZX-sky","SYD-sky","TPE-sky","THRA-sky","TSN-sky","HND-sky","NRT-sky","YYZ-sky","TIPA-sky","TRN-sky","VIE-sky",
+                          "WAW-sky","WMI-sky","BWI-sky","WUH-sky","WDHA-sky","RGN-sky","NSI-sky","ZAG-sky","ZRH-sky"];
+
+  List<String> _currencies = [ "","ZAR","GIP","CUP","RSD","BYN","GEL","GEL","CZK","MNT","MZN","GHS","INR","MWK","DKK","LKR","ALL","NAD","PEN","HUF","SCR","NOK","CHF",
+                               "ANG","LBP","MKD","JMD","NZD","FJD","GBP","LRD","PGK","EUR","TRY","PKR","XAF","IQD","CRC","RUB","MUR","SYP","BAM","KZT","BBD","JOD",
+                               "CDF","MVR","BTN","MRO","SLL","HKD","VND","UZS","PAB","SHP","XPF","CVE","UAH","TZS","THB","SOS","KGS","BSD","SBD","SAR","ERN","TJS",
+                               "LYD","AOA","SDG","BZD","BDT","AED","KHR","MYR","CNY","SGD","NPR","MGA","AWG","LAK","HNL","JPY","KRW","BHD","AZN","CLP","HTG","ARS",
+                               "BRL","TTD","ETB","TWD","WST","KPW","ZMW","USD","BOB","DOP","KWD","VUV","HRK","GMD","IRR","PHP","MMK","UGX","AUD","AFN","MAD","RON",
+                               "AMD","NGN","EGP","SEK","KMF","GNF","TOP","KYD","MOP","LSL","ISK","NIO","COP","MXN","TMT","DZD","XCD","DJF","IDR","PYG","YER","STD",
+                               "BWP","BIF","ILS","SRD","QAR","PLN","UYU","GYD","CAD","TND","BGN","BND","XOF","RWF","KES","SZL","GTQ","BMD","CUC","MDL" ];
+
+  /*List<String> _symbols = [ "R","£","$MN","Дин.","Br","₾","ر.ع.‏","Kč","₮","MT","GH¢","₹","MK","kr.","Rp","Lek","$","S/.","Ft","Rs","kr","CHF","NAf.","ل.ل.‏","ден."
+                            "J$","$","$","£","$","K","€","TL","Rs","F","د.ع.‏","₡","₽","Rs","ل.س.‏","КМ","Т","$","د.ا.‏", "FC","MVR","Nu.","UM","Le","HK$","₫","сўм",
+                            "B/.","£","F","$","грн.","TSh","฿","S","сом","$","$","SAR","Nfk","TJS","د.ل.‏","Kz","ج.س.‏","BZ$","BDT","AED","KHR","RM","¥","$","रु","Ar",
+                            "Afl.","₭","L.","¥","₩","د.ب.‏","₼","$","G","$","R$","TT$","Br","NT$","WS$","₩","ZK","$","Bs","RD$","د.ك.‏","VT","kn","D","ريال","P","K",
+                            "USh","$","AFN","د.م.‏","lei","դր.","₦","ج.م.‏","SEK","CF","FG","T$","$","MOP$","M","kr.","C$","$","$","m","د.ج.‏","$","Fdj","Rp","Gs",
+                            "ر.ي.‏","Db","P","FBu","₪","$","ر.ق.‏","zł","$U","$","C$","د.ت.‏","лв.","$","F","RWF","S","E","Q","$","CUC","lei" ];*/
+
+
+  int _selectedIndex = 0;
   int _currentTab = 0;
+
+  @override 
+  void initState() {
+    super.initState();
+    this.getJsonData();
+  }
+
+  Future<String> getJsonData() async {
+    http.Response response = await http.get(
+      Uri.encodeFull(url),
+      headers: {
+        "x-rapidapi-host": "skyscanner-skyscanner-flight-search-v1.p.rapidapi.com",
+		    "x-rapidapi-key": "a70b3d6729msh20b5d839aa754b9p12233ajsn8845f1de8b00"
+      }
+    );
+
+    data = response.body;
+
+    return "Success";
+  }
 
   List icons = list1();
   List routes = list2();
@@ -24,7 +108,7 @@ class _FlightsScreenState extends State<FlightsScreen> {
       context,
       route2[value],
     );
-  }
+  }                       
 
   Widget _buildIcon(int index) {
     return GestureDetector(
@@ -44,9 +128,7 @@ class _FlightsScreenState extends State<FlightsScreen> {
         child: Icon(
           icons[index],
           size: 25.0,
-          color: _selectedIndex == index 
-            ? Colors.redAccent
-            : Color(0xFFB4C1C4),
+          color: Colors.redAccent
         ),
       ),  
     );
@@ -80,6 +162,136 @@ class _FlightsScreenState extends State<FlightsScreen> {
                 .map( 
                   (MapEntry map) => _buildIcon(map.key),
                 ).toList(),
+            ),
+            SizedBox(height: 5.0),
+            Padding(
+              padding: EdgeInsets.only(left: 26.0, right: 22.0),
+              child: Row( 
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: list4(),
+              ),
+            ),
+            SizedBox(height: 20.0),
+            Padding( 
+              padding: EdgeInsets.all(8.0),
+              child: Form( 
+                key: formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    TextFormField( 
+                      decoration: InputDecoration( 
+                        labelText: 'Departing From',
+                        border: new OutlineInputBorder( 
+                          //borderRadius: new BorderRadius.circular(15.0),
+                          borderSide: new BorderSide(),
+                        ),
+                      ),
+                      validator: (input) => input.contains( "" ) ? "Please enter your takeoff destination" : null,
+                      onSaved: (input) => origin = input,
+                    ),
+                    SizedBox(height: 10.0),
+                    TextFormField( 
+                      decoration: InputDecoration( 
+                        labelText: 'Flying To',
+                        border: new OutlineInputBorder( 
+                          //borderRadius: new BorderRadius.circular(15.0),
+                          borderSide: new BorderSide(),
+                        ),
+                      ),
+                      validator: (input) => input.contains( "" ) ? "Please enter your arrival destination" : null,
+                      onSaved: (input) => destination = input,
+                    ),
+                    SizedBox(height: 10.0),
+                    TextFormField( 
+                      decoration: InputDecoration( 
+                        labelText: 'Departure Date',
+                        border: new OutlineInputBorder( 
+                          //borderRadius: new BorderRadius.circular(15.0),
+                          borderSide: new BorderSide(),
+                        ),
+                      ),
+                      validator: (input) => input.contains( "" ) ? "Please enter your departure date" : null,
+                      onSaved: (input) => departure = input,
+                    ),
+                    SizedBox(height: 10.0),
+                    TextFormField( 
+                      decoration: InputDecoration( 
+                        labelText: 'Arrival Date',
+                        border: new OutlineInputBorder( 
+                          //borderRadius: new BorderRadius.circular(15.0),
+                          borderSide: new BorderSide(),
+                        ),
+                      ),
+                      validator: (input) => input.contains( "" ) ? "Please enter your arrival date" : null,
+                      onSaved: (input) => arrival = input,
+                    ),
+                    SizedBox(height: 15.0),
+                    DropdownButtonFormField<String>(
+                      decoration: InputDecoration(
+                        labelText: 'ISO Country Code',
+                        border: new OutlineInputBorder( 
+                          //borderRadius: new BorderRadius.circular(15.0),
+                          borderSide: new BorderSide(),
+                        ),
+                      ),
+                      value: selectedItem,
+                      onChanged: (String newValue) {
+                        setState(() {
+                          selectedItem = newValue;
+                        });
+                      },
+                      items: _country.map((String dropDownStringItem) {
+                        return DropdownMenuItem<String>( 
+                          value: dropDownStringItem,
+                          child: Text(dropDownStringItem),
+                        );
+                      }).toList(),
+                    ),
+                    SizedBox(height: 15.0),
+                    DropdownButtonFormField<String>(
+                      decoration: InputDecoration(
+                        labelText: 'Currency Code',
+                        border: new OutlineInputBorder( 
+                          //borderRadius: new BorderRadius.circular(15.0),
+                          borderSide: new BorderSide(),
+                        ),
+                      ),
+                      value: selectedItem,
+                      onChanged: (String newValue) {
+                        setState(() {
+                          selectedItem = newValue;
+                        });
+                      },
+                      items: _currencies.map((String dropDownStringItem) {
+                        return DropdownMenuItem<String>( 
+                          value: dropDownStringItem,
+                          child: Text(dropDownStringItem),
+                        );
+                      }).toList(),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[ 
+                        Padding( 
+                          padding: const EdgeInsets.all(8.0),
+                          child: RaisedButton( 
+                            onPressed: () {    
+                              Navigator.push( 
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => AvailableFlights( flights: data ) 
+                                ),
+                              );
+                            },
+                            child: Text('Search'),
+                          ),
+                        )
+                      ],
+                    )
+                  ],
+                ),
+              ),
             ),
           ],
         ),
@@ -123,3 +335,8 @@ class _FlightsScreenState extends State<FlightsScreen> {
     );
   }
 }
+
+/*String _submit(String currency, String country, String locale, String origin, String destination, String departure, String arrival) {
+  
+  return "Success";
+}*/

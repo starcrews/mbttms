@@ -12,8 +12,10 @@ class CarsScreen extends StatefulWidget {
 }
 
 class _CarsScreenState extends State<CarsScreen> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 2;
   int _currentTab = 0;
+  final formKey = GlobalKey<FormState>();
+  String pickOff = "", dropOff = "", start = "", end = "", age = "";
 
   List icons = list1();
   List routes = list2();
@@ -44,9 +46,7 @@ class _CarsScreenState extends State<CarsScreen> {
         child: Icon(
           icons[index],
           size: 25.0,
-          color: _selectedIndex == index 
-            ? Colors.redAccent
-            : Color(0xFFB4C1C4),
+          color: Colors.redAccent
         ),
       ),  
     );
@@ -80,6 +80,104 @@ class _CarsScreenState extends State<CarsScreen> {
                 .map( 
                   (MapEntry map) => _buildIcon(map.key),
                 ).toList(),
+            ),
+            SizedBox(height: 5.0),
+            Padding(
+              padding: EdgeInsets.only(left: 26.0, right: 22.0),
+              child: Row( 
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: list4(),
+              ),
+            ),
+            SizedBox(height: 20.0),
+            Padding( 
+              padding: EdgeInsets.all(8.0),
+              child: Form( 
+                key: formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    TextFormField( 
+                      decoration: InputDecoration( 
+                        labelText: 'Pick-off Location',
+                        border: new OutlineInputBorder( 
+                          //borderRadius: new BorderRadius.circular(15.0),
+                          borderSide: new BorderSide(),
+                        ),
+                      ),
+                      validator: (input) => input.contains( "" ) ? "Please enter your takeoff destination" : null,
+                      onSaved: (input) => pickOff = input,
+                    ),
+                    SizedBox(height: 15.0),
+                    TextFormField( 
+                      decoration: InputDecoration( 
+                        labelText: 'Drop-off Location',
+                        border: new OutlineInputBorder( 
+                          //borderRadius: new BorderRadius.circular(15.0),
+                          borderSide: new BorderSide(),
+                        ),
+                      ),
+                      validator: (input) => input.contains( "" ) ? "Please enter your arrival destination" : null,
+                      onSaved: (input) => dropOff = input,
+                    ),
+                    SizedBox(height: 15.0),
+                    TextFormField( 
+                      decoration: InputDecoration( 
+                        labelText: 'Start Date',
+                        border: new OutlineInputBorder( 
+                          //borderRadius: new BorderRadius.circular(15.0),
+                          borderSide: new BorderSide(),
+                        ),
+                      ),
+                      validator: (input) => input.contains( "" ) ? "Please enter your departure date" : null,
+                      onSaved: (input) => start = input,
+                    ),
+                    SizedBox(height: 15.0),
+                    TextFormField( 
+                      decoration: InputDecoration( 
+                        labelText: 'End Date',
+                        border: new OutlineInputBorder( 
+                          //borderRadius: new BorderRadius.circular(15.0),
+                          borderSide: new BorderSide(),
+                        ),
+                      ),
+                      validator: (input) => input.contains( "" ) ? "Please enter your arrival date" : null,
+                      onSaved: (input) => end = input,
+                    ),
+                    SizedBox(height: 15.0),
+                    TextFormField( 
+                      decoration: InputDecoration( 
+                        labelText: "Driver's Age",
+                        border: new OutlineInputBorder( 
+                          //borderRadius: new BorderRadius.circular(15.0),
+                          borderSide: new BorderSide(),
+                        ),
+                      ),
+                      validator: (input) => input.contains( "" ) ? "Please enter your arrival date" : null,
+                      onSaved: (input) => age = input,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[ 
+                        Padding( 
+                          padding: const EdgeInsets.all(8.0),
+                          child: RaisedButton( 
+                            onPressed: () {    
+                              /*Navigator.push( 
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => AvailableFlights( flights: data ) 
+                                ),
+                              );*/
+                            },
+                            child: Text('Search'),
+                          ),
+                        )
+                      ],
+                    )
+                  ],
+                ),
+              ),
             ),
           ],
         ),

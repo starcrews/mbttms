@@ -3,7 +3,7 @@ import 'package:mbttms/models/hotels_model.dart';
 import 'package:mbttms/widgets/custom_widgets.dart';
 
 class HotelsScreen extends StatefulWidget {
-  final Hotels hotels;
+  final Hotel hotels;
 
   HotelsScreen({this.hotels});
 
@@ -12,8 +12,10 @@ class HotelsScreen extends StatefulWidget {
 }
 
 class _HotelsScreenState extends State<HotelsScreen> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 1;
   int _currentTab = 0;
+  String destination = "", arrival = "", departure = "", rooms = "", guests = "";
+  final formKey = GlobalKey<FormState>();
 
   List icons = list1();
   List routes = list2();
@@ -44,9 +46,7 @@ class _HotelsScreenState extends State<HotelsScreen> {
         child: Icon(
           icons[index],
           size: 25.0,
-          color: _selectedIndex == index 
-            ? Colors.redAccent
-            : Color(0xFFB4C1C4),
+          color: Colors.redAccent
         ),
       ),  
     );
@@ -80,6 +80,104 @@ class _HotelsScreenState extends State<HotelsScreen> {
                 .map( 
                   (MapEntry map) => _buildIcon(map.key),
                 ).toList(),
+            ),
+            SizedBox(height: 5.0),
+            Padding(
+              padding: EdgeInsets.only(left: 26.0, right: 22.0),
+              child: Row( 
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: list4(),
+              ),
+            ),
+            SizedBox(height: 20.0),
+            Padding( 
+              padding: EdgeInsets.all(8.0),
+              child: Form( 
+                key: formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    TextFormField( 
+                      decoration: InputDecoration( 
+                        labelText: 'Destination',
+                        border: new OutlineInputBorder( 
+                          //borderRadius: new BorderRadius.circular(15.0),
+                          borderSide: new BorderSide(),
+                        ),
+                      ),
+                      validator: (input) => input.contains( "" ) ? "Please enter your takeoff destination" : null,
+                      onSaved: (input) => destination = input,
+                    ),
+                    SizedBox(height: 15.0),
+                    TextFormField( 
+                      decoration: InputDecoration( 
+                        labelText: 'Arrival Date',
+                        border: new OutlineInputBorder( 
+                          //borderRadius: new BorderRadius.circular(15.0),
+                          borderSide: new BorderSide(),
+                        ),
+                      ),
+                      validator: (input) => input.contains( "" ) ? "Please enter your arrival destination" : null,
+                      onSaved: (input) => arrival = input,
+                    ),
+                    SizedBox(height: 15.0),
+                    TextFormField( 
+                      decoration: InputDecoration( 
+                        labelText: 'Departure Date',
+                        border: new OutlineInputBorder( 
+                          //borderRadius: new BorderRadius.circular(15.0),
+                          borderSide: new BorderSide(),
+                        ),
+                      ),
+                      validator: (input) => input.contains( "" ) ? "Please enter your departure date" : null,
+                      onSaved: (input) => departure = input,
+                    ),
+                    SizedBox(height: 15.0),
+                    TextFormField( 
+                      decoration: InputDecoration( 
+                        labelText: 'No. of Rooms',
+                        border: new OutlineInputBorder( 
+                          //borderRadius: new BorderRadius.circular(15.0),
+                          borderSide: new BorderSide(),
+                        ),
+                      ),
+                      validator: (input) => input.contains( "" ) ? "Please enter your arrival date" : null,
+                      onSaved: (input) => rooms = input,
+                    ),
+                    SizedBox(height: 15.0),
+                    TextFormField( 
+                      decoration: InputDecoration( 
+                        labelText: 'No. of Guests',
+                        border: new OutlineInputBorder( 
+                          //borderRadius: new BorderRadius.circular(15.0),
+                          borderSide: new BorderSide(),
+                        ),
+                      ),
+                      validator: (input) => input.contains( "" ) ? "Please enter your arrival date" : null,
+                      onSaved: (input) => guests = input,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[ 
+                        Padding( 
+                          padding: const EdgeInsets.all(8.0),
+                          child: RaisedButton( 
+                            onPressed: () {    
+                              /*Navigator.push( 
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => AvailableFlights( flights: data ) 
+                                ),
+                              );*/
+                            },
+                            child: Text('Search'),
+                          ),
+                        )
+                      ],
+                    )
+                  ],
+                ),
+              ),
             ),
           ],
         ),

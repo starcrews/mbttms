@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mbttms/models/home_models.dart';
 import 'package:mbttms/widgets/custom_widgets.dart';
+import 'package:mbttms/widgets/explore_carousel.dart';
 
 class HomeScreen extends StatefulWidget {
   final Homes home;
@@ -12,7 +13,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _selectedIndex = 0;   
+  //int _selectedIndex = 0;   
   int _currentTab = 0;
 
   List icons = list1();
@@ -28,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildIcon(int index) {
     return GestureDetector(
-      onTap: () => Navigator.push( 
+      onTap: () => Navigator.pushReplacement( 
         context,
         routes[index],
       ), 
@@ -36,17 +37,13 @@ class _HomeScreenState extends State<HomeScreen> {
         height: 60.0,
         width: 60.0,
         decoration: BoxDecoration(
-          color: _selectedIndex == index 
-            ? Theme.of(context).accentColor 
-            : Color(0xFFE7EBEE),
+          color: Color(0xFFE7EBEE),
           borderRadius: BorderRadius.circular(30.0),
         ),
         child: Icon(
           icons[index],
           size: 25.0,
-          color: _selectedIndex == index 
-            ? Colors.redAccent
-            : Color(0xFFB4C1C4),
+          color: Colors.redAccent
         ),
       ),  
     );
@@ -81,6 +78,76 @@ class _HomeScreenState extends State<HomeScreen> {
                   (MapEntry map) => _buildIcon(map.key),
                 ).toList(),
             ),
+            SizedBox(height: 5.0),
+            Padding(
+              padding: EdgeInsets.only(left: 26.0, right: 22.0),
+              child: Row( 
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: list4(),
+              ),
+            ),
+            SizedBox(height: 40.0),
+            Padding( 
+              padding: EdgeInsets.only(left: 20.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Text ( 
+                    'Travel Smarter', 
+                    style: TextStyle(
+                      fontSize: 23.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),     
+            SizedBox(height: 20.0),       
+            Container( 
+              height: 200.0,
+              margin: EdgeInsets.only(left: 20.0, right: 20.0),
+              child: 
+                Text(
+                  '    Book Flights\n             Book Hotels\n                        Hire Cars\n\n    All at the best prices!',
+                  style: TextStyle(  
+                    fontSize: 30.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  )
+                ),
+              decoration: new BoxDecoration(
+                color: Colors.redAccent,
+              ),
+            ),
+            SizedBox(height: 20.0),
+            Padding( 
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text ( 
+                    'Explore the World', 
+                    style: TextStyle(
+                      fontSize: 23.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  GestureDetector( 
+                    onTap: () => print('See All'),
+                    child: Text( 
+                      'See All',
+                      style: TextStyle(
+                        color: Colors.redAccent,
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 20.0),
+            ExploreCarousel(),
           ],
         ),
       ),
