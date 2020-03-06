@@ -1,9 +1,20 @@
 class Flights {
-  /*String url;
+  String currency;
+  String country;
+ // String locale;
+  String origin;
+  String destination;
+  //String departure;
+  //String arrival;
 
   Flights({ 
-    this.url,
-  });*/
+    this.origin,
+    this.destination,
+    this.country,
+    this.currency,
+    //this.locale,
+    //this.departure
+  });
 }
 
 /*List<Flights> routes = [

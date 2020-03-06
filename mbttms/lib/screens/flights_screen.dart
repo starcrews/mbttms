@@ -4,6 +4,9 @@ import 'package:mbttms/models/flights_model.dart';
 import 'package:mbttms/widgets/custom_widgets.dart';
 import 'package:mbttms/screens/available_flights.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_date_picker/flutter_date_picker.dart';
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+import 'package:intl/intl.dart';
 
 class FlightsScreen extends StatefulWidget {
   final Flights flights;
@@ -19,9 +22,12 @@ String selectedItem = "";
 class _FlightsScreenState extends State<FlightsScreen> {
   final String url = 'https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browseroutes/v1.0/NG/NGN/en/LOS-sky/JFK-sky/2020-02-24/2020-03-06';
   final formKey = GlobalKey<FormState>();
-  String currency = "", country = "", locale = "en", origin = "", destination = "", departure = "", arrival = "";
-  String data;
-  List<String> _country = [ "","AD","AE","AF","AG","AI","AL","AM","AO","AQ","AR","AS","AT","AU","AW","AZ","BA","BB","BD","BE","BF","BG","BH","BI","BJ","BL","BM","BN",
+  String currency = "", locale = "en", country = "", origin = "", destination = "", departure = "", arrival = "";
+  String data; String selectedItem1 = "Abidjan", selectedItem2 = "Abidjan", selectedItem3 = "AD", selectedItem4 = "ZAR";
+  DateTime depart_date = new DateTime.now();
+  BasicDateField form = new BasicDateField();
+ 
+  List<String> _country = [ "AD","AE","AF","AG","AI","AL","AM","AO","AQ","AR","AS","AT","AU","AW","AZ","BA","BB","BD","BE","BF","BG","BH","BI","BJ","BL","BM","BN",
                             "BO","BQ","BR","BS","BT","BW","BY","BZ","CA","CC","CD","CF","CG","CH","CI","CK","CL","CM","CN","CO","CR","CU","CV","CW","CX","CY","CZ",
                             "DE","DJ","DK","DM","DO","DZ","EC","EE","EG","ER","ES","ET","FI","FJ","FK","FM","FO","FR","GA","GD","GE","GF","GG","GH","GI","GL","GM",
                             "GN","GP","GQ","GR","GS","GT","GU","GW","GY","HK","HN","HR","HT","HU","ID","IE","IL","IN","IQ","IR","IS","IT","JM","JO","JP","KE","KG",
@@ -32,7 +38,7 @@ class _FlightsScreenState extends State<FlightsScreen> {
                             "US","UY","UZ","VA","VC","VE","VG","VI","VN","VU","WF","WS","YE","YT","ZA","ZM","ZW"];
 
 
-  List<String> _cities = [ "Abidjan","Abu Dhabi","Abuja","Accra","Addis Ababa","Alexandria","Alexandria Borg El Arab","Algiers","Amsterdam","Ankara","Antananarivo",
+  List<String> _cities = [ "Abidjan","Abu Dhabi","Abuja","Accra","Addis Ababa","Alexandria","Alexandria (Borg El Arab)","Algiers","Amsterdam","Ankara","Antananarivo",
                           "Atlanta","Athens","Auckland","Baghdad","Bamako","Bangkok","Barcelona","Beijing Capital","Beijing Daxing","Beirut","Belo Horizonte","Bengaluru",
                           "Bogota","Boston","Brasilia","Brazzaville","Brussels International","Brussels S. Charleroi","Bucharest","Buenos Aires","Buenos Aires Jorge Newbery",
                           "Cape Town","Caracas","Cardiff","Casablanca Mohamed V.","Chengdu","Chiang Mai","Chicago","Chicago O'Hare International","Chicago Midway","Conakry",
@@ -48,9 +54,9 @@ class _FlightsScreenState extends State<FlightsScreen> {
                           "Tehran","Tianjin","Tokyo Haneda","Tokyo Narita","Toronto","Tripoli","Turin","Vienna","Warsaw Chopin","Warsaw Modlin","Washington","Wuhan","Windhoek",
                           "Yangon","Yaounde","Zagreb","Zurich"];
 
-  List<String> _cities2 = ["ABJ-sky","AUH-sky","ABV-sky","ACC-sky","ADD-sky","ALEX-sky","HBE-sky","ALG-sky","AMS-sky","ESB-sky","TNR-sky","ATL-sky","ATH-sky","AKL-sky","BGW-sky",
-                          "BKO-sky","BKK-sky","BCN-sky","PEK-sky","PKX-sky","BEY-sky","CNF-sky","BLR-sky","BOG-sky","BOS-sky","BSB-sky","BZV-sky","BRUS-sky","BRU-sky","CRL-sky",
-                          "OTP-sky","BUEA-sky","AEP-sky","CPT-sky","CCS-sky","CMN-sky","CWL-sky","CTU-sky","CNX-sky","CHIA-sky","ORD-sky","MDW-sky","CKY-sky","AFW-sky","DAR-sky",
+  List<String> _cities2 = [ "ABJ-sky","AUH-sky","ABV-sky","ACC-sky","ADD-sky","ALEX-sky","HBE-sky","ALG-sky","AMS-sky","ESB-sky","TNR-sky","ATL-sky","ATH-sky","AKL-sky","BGW-sky",
+                          "BKO-sky","BKK-sky","BCN-sky","PEK-sky","PKX-sky","BEY-sky","CNF-sky","BLR-sky","BOG-sky","BOS-sky","BSB-sky","BZV-sky","BRU-sky","CRL-sky",
+                          "OTP-sky","BUEA-sky","AEP-sky","CPT-sky","CCS-sky","CWL-sky","CMN-sky","CTU-sky","CNX-sky","CHIA-sky","ORD-sky","MDW-sky","CKY-sky","AFW-sky","DAR-sky",
                           "DAC-sky","DLA-sky","DUB-sky","DUR-sky","EDI-sky","FNA-sky","FRAN-sky","CAN-sky","GYE-sky","HAM-sky","HAN-sky","HAVA-sky","HRE-sky","SGN-sky","HKG-sky",
                           "HYD-sky","ISTA-sky","JED-sky","JNB-sky","KHI-sky","KRT-sky","KUL-sky","SZB-sky","KWI-sky","FIH-sky","CCU-sky","LOS-sky","LIM-sky","LIS-sky","LOND-sky",
                           "LHR-sky","LGW-sky","LAX-sky","LAD-sky","MAD-sky","MAO-sky","MNL-sky","MRS-sky","EOH-sky","MDE-sky","MELA-sky","MEX-sky","MIA-sky","MILA-sky","LIN-sky",
@@ -60,7 +66,7 @@ class _FlightsScreenState extends State<FlightsScreen> {
                           "GMP-sky","ICN-sky","SHA-sky","PVG-sky","SZX-sky","SYD-sky","TPE-sky","THRA-sky","TSN-sky","HND-sky","NRT-sky","YYZ-sky","TIPA-sky","TRN-sky","VIE-sky",
                           "WAW-sky","WMI-sky","BWI-sky","WUH-sky","WDHA-sky","RGN-sky","NSI-sky","ZAG-sky","ZRH-sky"];
 
-  List<String> _currencies = [ "","ZAR","GIP","CUP","RSD","BYN","GEL","GEL","CZK","MNT","MZN","GHS","INR","MWK","DKK","LKR","ALL","NAD","PEN","HUF","SCR","NOK","CHF",
+  List<String> _currencies = [ "ZAR","GIP","CUP","RSD","BYN","GEL","GEL","CZK","MNT","MZN","GHS","INR","MWK","DKK","LKR","ALL","NAD","PEN","HUF","SCR","NOK","CHF",
                                "ANG","LBP","MKD","JMD","NZD","FJD","GBP","LRD","PGK","EUR","TRY","PKR","XAF","IQD","CRC","RUB","MUR","SYP","BAM","KZT","BBD","JOD",
                                "CDF","MVR","BTN","MRO","SLL","HKD","VND","UZS","PAB","SHP","XPF","CVE","UAH","TZS","THB","SOS","KGS","BSD","SBD","SAR","ERN","TJS",
                                "LYD","AOA","SDG","BZD","BDT","AED","KHR","MYR","CNY","SGD","NPR","MGA","AWG","LAK","HNL","JPY","KRW","BHD","AZN","CLP","HTG","ARS",
@@ -134,6 +140,8 @@ class _FlightsScreenState extends State<FlightsScreen> {
     );
   }
 
+  Flights flight;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -178,54 +186,133 @@ class _FlightsScreenState extends State<FlightsScreen> {
                 key: formKey,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    TextFormField( 
-                      decoration: InputDecoration( 
+                  children: <Widget>[                 
+                    DropdownButtonFormField<String>(
+                      decoration: InputDecoration(
                         labelText: 'Departing From',
                         border: new OutlineInputBorder( 
                           //borderRadius: new BorderRadius.circular(15.0),
                           borderSide: new BorderSide(),
                         ),
                       ),
-                      validator: (input) => input.contains( "" ) ? "Please enter your takeoff destination" : null,
-                      onSaved: (input) => origin = input,
+                      value: selectedItem1,
+                      onChanged: (String newValue) {
+                        setState(() {
+                          selectedItem1 = newValue;
+                        });
+                      },
+                      items: _cities.map((String value) {
+                        return DropdownMenuItem<String>( 
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      onSaved: (selectedItem1) {
+                        origin = selectedItem1;
+                        formKey.currentState.save();
+                      },
+                  
                     ),
                     SizedBox(height: 10.0),
-                    TextFormField( 
-                      decoration: InputDecoration( 
+                    DropdownButtonFormField<String>(
+                      decoration: InputDecoration(
                         labelText: 'Flying To',
                         border: new OutlineInputBorder( 
                           //borderRadius: new BorderRadius.circular(15.0),
                           borderSide: new BorderSide(),
                         ),
                       ),
-                      validator: (input) => input.contains( "" ) ? "Please enter your arrival destination" : null,
-                      onSaved: (input) => destination = input,
+                      value: selectedItem2,
+                      onChanged: (String newValue) {
+                        setState(() {
+                          selectedItem2 = newValue;
+                        });
+                      },
+                      items: _cities.map((String dropDownStringItem) {
+                        return DropdownMenuItem<String>( 
+                          value: dropDownStringItem,
+                          child: Text(dropDownStringItem),
+                        );
+                      }).toList(),
+                      onSaved: (selectedItem2) {
+                        destination = selectedItem2;
+                        formKey.currentState.save();
+                      },
                     ),
-                    SizedBox(height: 10.0),
-                    TextFormField( 
-                      decoration: InputDecoration( 
-                        labelText: 'Departure Date',
-                        border: new OutlineInputBorder( 
-                          //borderRadius: new BorderRadius.circular(15.0),
-                          borderSide: new BorderSide(),
-                        ),
-                      ),
-                      validator: (input) => input.contains( "" ) ? "Please enter your departure date" : null,
-                      onSaved: (input) => departure = input,
-                    ),
-                    SizedBox(height: 10.0),
-                    TextFormField( 
-                      decoration: InputDecoration( 
-                        labelText: 'Arrival Date',
-                        border: new OutlineInputBorder( 
-                          //borderRadius: new BorderRadius.circular(15.0),
-                          borderSide: new BorderSide(),
-                        ),
-                      ),
-                      validator: (input) => input.contains( "" ) ? "Please enter your arrival date" : null,
-                      onSaved: (input) => arrival = input,
-                    ),
+                    /*SizedBox(height: 10.0),
+                    Row(children: <Widget>[ 
+      Text('Basic date field'),
+      DateTimeField( 
+        format: DateFormat("yyyy-MM-dd"),
+        onShowPicker: (context, currentValue) {
+          return showDatePicker(
+            context: context,
+            initialDate: DateTime.now(), 
+            firstDate: new DateTime(2019), 
+            lastDate: new DateTime(2022) 
+          );
+        },
+      )
+    ],),
+  
+                    /*Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[ 
+                        Padding( 
+                          padding: const EdgeInsets.all(8.0),
+                          child: RaisedButton( 
+                            child: Text( 'Pick a departure date'),
+                            onPressed: () {    
+                              showDatePicker(
+                                context: context, 
+                                initialDate: DateTime.now(), 
+                                firstDate: new DateTime(2019), 
+                                lastDate: new DateTime(2022)
+                              ).then((date) {
+                                setState(() {
+                                  depart_date = date; 
+                                });
+                              });
+                            },           
+                          ),
+                        )
+                      ],
+                    ),*/
+                    SizedBox(height: 15.0),
+                     Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[ 
+                        Padding( 
+                          padding: const EdgeInsets.all(8.0),
+                          child: DateTimeField( 
+                            format: DateFormat("yyyy-MM-dd"),
+                            onShowPicker: (context, currentValue) {
+                            return showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(), 
+                              firstDate: new DateTime(2019), 
+                              lastDate: new DateTime(2022) 
+                            );
+                           },
+                          )
+                          /*RaisedButton( 
+                            child: Text( 'Pick an arrival date'),
+                            onPressed: () {    
+                              showDatePicker(
+                                context: context, 
+                                initialDate: DateTime.now(), 
+                                firstDate: new DateTime(2019), 
+                                lastDate: new DateTime(2022)
+                              ).then((date) {
+                                setState(() {
+                                  depart_date = date; 
+                                });
+                              });
+                            },           
+                          ),*/
+                        )
+                      ],
+                    ),*/
                     SizedBox(height: 15.0),
                     DropdownButtonFormField<String>(
                       decoration: InputDecoration(
@@ -235,10 +322,10 @@ class _FlightsScreenState extends State<FlightsScreen> {
                           borderSide: new BorderSide(),
                         ),
                       ),
-                      value: selectedItem,
+                      value: selectedItem3,
                       onChanged: (String newValue) {
                         setState(() {
-                          selectedItem = newValue;
+                          selectedItem3 = newValue;
                         });
                       },
                       items: _country.map((String dropDownStringItem) {
@@ -247,6 +334,10 @@ class _FlightsScreenState extends State<FlightsScreen> {
                           child: Text(dropDownStringItem),
                         );
                       }).toList(),
+                      onSaved: (selectedItem3) {
+                        country = selectedItem3;
+                        formKey.currentState.save();
+                      },
                     ),
                     SizedBox(height: 15.0),
                     DropdownButtonFormField<String>(
@@ -257,10 +348,10 @@ class _FlightsScreenState extends State<FlightsScreen> {
                           borderSide: new BorderSide(),
                         ),
                       ),
-                      value: selectedItem,
+                      value: selectedItem4,
                       onChanged: (String newValue) {
                         setState(() {
-                          selectedItem = newValue;
+                          selectedItem4 = newValue;
                         });
                       },
                       items: _currencies.map((String dropDownStringItem) {
@@ -269,6 +360,10 @@ class _FlightsScreenState extends State<FlightsScreen> {
                           child: Text(dropDownStringItem),
                         );
                       }).toList(),
+                      onSaved: (selectedItem4) {
+                        currency = selectedItem4;
+                        formKey.currentState.save();
+                      },
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -280,8 +375,12 @@ class _FlightsScreenState extends State<FlightsScreen> {
                               Navigator.push( 
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => AvailableFlights( flights: data ) 
-                                ),
+                                  //builder: (context) => AvailableFlights( flights.country  ) 
+                                  builder: (context) => AvailableFlights( departure: flights  
+                                                                          /*flights.destination: selectedItem2,
+                                                                          flights.country: selectedItem3,
+                                                                          flights.currency: selectedItem4*/ ), 
+                                )
                               );
                             },
                             child: Text('Search'),
@@ -340,3 +439,28 @@ class _FlightsScreenState extends State<FlightsScreen> {
   
   return "Success";
 }*/
+
+class BasicDateField extends StatelessWidget {
+  final format = DateFormat("yyyy-MM-dd");
+  @override 
+  Widget build(BuildContext context) {
+    return Column(children: <Widget>[ 
+      Text('Basic date field (${format.pattern})'),
+      DateTimeField( 
+        format: format,
+        onShowPicker: (context, currentValue) {
+          return showDatePicker(
+            context: context,
+            initialDate: DateTime.now(), 
+            firstDate: new DateTime(2019), 
+            lastDate: new DateTime(2022) 
+          );
+        },
+      )
+    ],);
+  }
+}
+
+
+
+

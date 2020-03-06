@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:mbttms/widgets/custom_widgets.dart';
+import 'package:mbttms/models/flights_model.dart';
 
 class AvailableFlights extends StatefulWidget {
-  final String flights;
-  //const AvailableFlights(this.flights);
-  AvailableFlights({ Key key, @required this.flights }) : super(key: key);
+  final Flights departure; //arrival, country, currency;
+  //final List<String> flights;
+
+  //const AvailableFlights({ Key key, this.flights }) : super(key: key);
+  AvailableFlights( { Key key, this.departure, 
+                              /*this.arrival, 
+                              this.country, 
+                              this.currency*/ }) : super(key: key);
 
   @override 
   _AvailableFlightsState createState() => _AvailableFlightsState();
@@ -21,10 +27,14 @@ class _AvailableFlightsState extends State<AvailableFlights> {
       route2[value],
     );
   }
-  
+  //When you come back set the values of flights variables to selectedItems
   @override
   Widget build(BuildContext context) {
-    print(widget.flights);
+    //print(widget.flights); 
+    print(widget.departure);
+    //print(widget.arrival);
+    //print(widget.country); 
+    //print(widget.currency); 
 
     return Scaffold(
       body: SafeArea(
