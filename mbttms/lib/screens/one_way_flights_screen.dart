@@ -1,15 +1,16 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:mbttms/models/flights_model.dart';
+import 'package:mbttms/models/one_way_flights_model.dart';
 import 'package:mbttms/widgets/custom_widgets.dart';
-import 'package:mbttms/screens/available_flights.dart';
+import 'package:mbttms/screens/available_flights2.dart';
+import 'package:mbttms/screens/flights_screen.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
-import 'package:mbttms/screens/one_way_flights_screen.dart';
 
-class FlightsScreen extends StatefulWidget {
-  final Flights flights;
+class OneFlightsScreen extends StatefulWidget {
+  final OneFlights flights;
 
-  FlightsScreen({this.flights});
+  OneFlightsScreen({this.flights});
 
   @override 
   _FlightsScreenState createState() => _FlightsScreenState();
@@ -17,10 +18,10 @@ class FlightsScreen extends StatefulWidget {
 
 String selectedItem = "";
 
-class _FlightsScreenState extends State<FlightsScreen> {
+class _FlightsScreenState extends State<OneFlightsScreen> {
   final formKey = GlobalKey<FormState>();
   String selectedItem1 = "Abidjan", selectedItem11 = "", selectedItem2 = "Abidjan", selectedItem21 = "", selectedItem3 = "AD", selectedItem4 = "ZAR";
-  String selectedItem5 = "", selectedItem6 = "";
+  String selectedItem5 = "";
   BasicDateField form = new BasicDateField();
   int index1 = 0, index2 = 0;
  
@@ -117,7 +118,7 @@ class _FlightsScreenState extends State<FlightsScreen> {
     );
   }
 
-  Flights flight;
+  OneFlights flight;
 
   @override
   Widget build(BuildContext context) {
@@ -180,9 +181,9 @@ class _FlightsScreenState extends State<FlightsScreen> {
                 ),
                 Padding( 
                   padding: const EdgeInsets.all(8.0),
-                  child: RaisedButton( 
+                  child: RaisedButton(
                     color: Colors.redAccent,
-                    textColor: Colors.white,
+                    textColor: Colors.white, 
                     onPressed: () {    
                       Navigator.push( 
                         context,
@@ -198,7 +199,7 @@ class _FlightsScreenState extends State<FlightsScreen> {
                 )
               ],
             ),
-            SizedBox(height: 20.0),
+            SizedBox(height:20.0),
             Padding( 
               padding: EdgeInsets.all(8.0),
               child: Form( 
@@ -312,30 +313,6 @@ class _FlightsScreenState extends State<FlightsScreen> {
                         Padding( 
                           padding: const EdgeInsets.all(8.0),
                           child: RaisedButton( 
-                            child: Text( 'Arrival date'),
-                            onPressed: () {    
-                              showDatePicker(
-                                context: context, 
-                                initialDate: DateTime.now(), 
-                                firstDate: new DateTime(2019), 
-                                lastDate: new DateTime(2022)
-                              ).then((date) {
-                                setState(() {
-                                  var format = new DateFormat('yyyy-MM-dd');
-                                  selectedItem6 = format.format(date);
-                                });
-                              });
-                            },           
-                          ),
-                        )
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[ 
-                        Padding( 
-                          padding: const EdgeInsets.all(8.0),
-                          child: RaisedButton( 
                             child: Text( 'Departure date'),
                             onPressed: () {    
                               showDatePicker(
@@ -353,7 +330,7 @@ class _FlightsScreenState extends State<FlightsScreen> {
                           ),
                         )
                       ],
-                    ),
+                    ),  
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[ 
@@ -365,12 +342,11 @@ class _FlightsScreenState extends State<FlightsScreen> {
                                 context,
                                 MaterialPageRoute(
                                   //builder: (context) => AvailableFlights( flights.country  ) 
-                                  builder: (context) => AvailableFlights( origin: _cities2[index1],
+                                  builder: (context) => AvailableFlights2( origin: _cities2[index1],
                                                                           destination: _cities2[index2],
                                                                           country: selectedItem3,
                                                                           currency: selectedItem4,
-                                                                          departDate: selectedItem5,
-                                                                          arriveDate: selectedItem6 ), 
+                                                                          departDate: selectedItem5 ), 
                                 )
                               );
                             },
@@ -446,6 +422,9 @@ class BasicDateField extends StatelessWidget {
     ],);
   }
 }
+
+
+
 
 
 

@@ -5,26 +5,25 @@ import 'dart:convert';
 //import 'package:mbttms/models/flights_model.dart';
 //import 'package:mbttms/services/db.dart';
 
-class AvailableFlights extends StatefulWidget {
+class AvailableFlights2 extends StatefulWidget {
   //final Flights departure; //arrival, country, currency;
   //final List<String> flights;
-  final String origin, destination, country, currency, departDate, arriveDate;
+  final String origin, destination, country, currency, departDate;
 
   //const AvailableFlights({ Key key, this.flights }) : super(key: key);
-  AvailableFlights( { Key key, this.origin, 
+  AvailableFlights2( { Key key, this.origin, 
                               this.destination,
                               this.country, 
                               this.currency,
-                              this.departDate,
-                              this.arriveDate, }) : super(key: key);
+                              this.departDate }) : super(key: key);
 
   @override 
-  _AvailableFlightsState createState() => _AvailableFlightsState();
+  _AvailableFlightsState2 createState() => _AvailableFlightsState2();
 }
 
-class _AvailableFlightsState extends State<AvailableFlights> {
+class _AvailableFlightsState2 extends State<AvailableFlights2> {
   String url = 'https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browseroutes/v1.0/', url2 = ""; 
-  int _currentTab = 0; var data; 
+  int _currentTab = 0; List data; 
   String country = "", currency = "", origin = "", destination = "", departDate = "", arriveDate = "";
   List route2 = list3();
   
@@ -34,14 +33,13 @@ class _AvailableFlightsState extends State<AvailableFlights> {
     origin = widget.origin.toString();
     destination = widget.destination.toString();
     departDate = widget.departDate.toString();
-    arriveDate = widget.arriveDate.toString();
 
-    url2 = url + country + '/' + currency + '/en/' + origin + '/' + destination + '/' + departDate + '/' + arriveDate;
+    url2 = url + country + '/' + currency + '/en/' + origin + '/' + destination + '/' + departDate;
 
     return url2;
   }
 
-  AvailableFlights flights;
+  AvailableFlights2 flights;
 
   @override 
   void initState() {
@@ -62,7 +60,7 @@ class _AvailableFlightsState extends State<AvailableFlights> {
     setState(() {
       data = json.decode(response.body)['Carriers'];
     });
-
+    
     return "Successful";
   }
 
@@ -88,6 +86,7 @@ class _AvailableFlightsState extends State<AvailableFlights> {
         ),
         backgroundColor: Colors.redAccent,
       ),
+      body: buildListView(),
       bottomNavigationBar: BottomNavigationBar( 
         currentIndex: _currentTab,
         backgroundColor: Colors.white70, 

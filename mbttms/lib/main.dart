@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:mbttms/screens/home_screen.dart';
+import 'package:mbttms/services/db.dart';
 
-void main() => runApp(MyApp());
+//void main() => runApp(MyApp());
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await DB.init();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override 

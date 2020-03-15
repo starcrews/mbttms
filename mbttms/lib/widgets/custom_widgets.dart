@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:mbttms/models/one_way_flights_model.dart';
 import 'package:mbttms/screens/cars_screen.dart';
 import 'package:mbttms/models/cars_model.dart';
 import 'package:mbttms/models/flights_model.dart';
@@ -17,6 +18,7 @@ import 'package:mbttms/models/trips_models.dart';
 
 
 Flights flights;
+OneFlights flights2;
 Hotel hotels;
 Cars cars;
 Trips trips;
