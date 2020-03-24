@@ -1,0 +1,19 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "Nodejs server for MBTTMS app",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "author": "Taiosquare",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "mongodb": "^3.5.5",
+    "mongoose": "^5.9.5",
+    "nodemon": "^2.0.2",
+    "socket.io": "^2.3.0"
+  }
+}

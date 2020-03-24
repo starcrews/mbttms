@@ -43,27 +43,27 @@ List list2() {
   List<Route> routes;
 
   routes = [
-      MaterialPageRoute(
-        builder: (_) => FlightsScreen( 
-          flights: flights,
-        ),
+    MaterialPageRoute(
+      builder: (_) => FlightsScreen( 
+        flights: flights,
       ),
-      MaterialPageRoute(
-        builder: (_) => HotelsScreen( 
-          hotels: hotels,
-        ),
+    ),
+    MaterialPageRoute(
+      builder: (_) => HotelsScreen( 
+        hotels: hotels,
       ),
-      MaterialPageRoute(
-        builder: (_) => CarsScreen( 
-          cars: cars,
-        ),
+    ),
+    MaterialPageRoute(
+      builder: (_) => CarsScreen( 
+        cars: cars,
       ),
-      MaterialPageRoute(
-        builder: (_) => RecommendationsScreen( 
-          recommendations: recommendations,
-        ),
+    ),
+    MaterialPageRoute(
+      builder: (_) => RecommendationsScreen( 
+        recommendations: recommendations,
       ),
-    ];
+    ),
+  ];
 
   return routes;
 } 
@@ -96,42 +96,43 @@ List list4() {
   List<Text> names;
 
   names = [
-     Text ( 
-                    'Flights',
-                    style: TextStyle(
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black45,
-                    )
-                  ),
-                  Text ( 
-                    '  Hotels',
-                    style: TextStyle(
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black45,
-                    )
-                  ),
-                  Text ( 
-                    'Car Hire',
-                    style: TextStyle(
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black45,
-                    )
-                  ),
-                  Text ( 
-                    'Explore',
-                    style: TextStyle(
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black45,
-                    )
-                  )
+    Text ( 
+      'Flights',
+      style: TextStyle(
+        fontSize: 15.0,
+        fontWeight: FontWeight.bold,
+        color: Colors.black45,
+      )
+    ),
+    Text ( 
+      '  Hotels',
+      style: TextStyle(
+        fontSize: 15.0,
+        fontWeight: FontWeight.bold,
+        color: Colors.black45,
+      )
+    ),
+    Text ( 
+      'Car Hire',
+      style: TextStyle(
+        fontSize: 15.0,
+        fontWeight: FontWeight.bold,
+        color: Colors.black45,
+      )
+    ),
+    Text ( 
+      'Explore',
+      style: TextStyle(
+        fontSize: 15.0,
+        fontWeight: FontWeight.bold,
+        color: Colors.black45,
+      )
+    )
   ];
 
   return names;
 }
+
 
 /*Widget buildIcon(int index, List icons, List routes, int _selectedIndex, BuildContext context ) {
   Widget _buildIcon;
@@ -164,6 +165,14 @@ List list4() {
 }
 
 void _changePage( int value, BuildContext context ) {
+    Navigator.push( 
+      context,
+      route2[value],
+    );
+  }
+
+
+void _changePage( BuildContext context, int value ) {
     Navigator.push( 
       context,
       route2[value],
@@ -209,5 +218,8 @@ BottomNavigationBar _bum(int _currentTab ) {
           ),
         ],
       ),
+
+  return bum;
 } */
+
 

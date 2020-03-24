@@ -15,7 +15,7 @@ class AvailableFlights2 extends StatefulWidget {
                               this.destination,
                               this.country, 
                               this.currency,
-                              this.departDate }) : super(key: key);
+                              this.departDate }) : super(key : key);
 
   @override 
   _AvailableFlightsState2 createState() => _AvailableFlightsState2();
