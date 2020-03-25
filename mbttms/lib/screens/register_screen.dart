@@ -2,21 +2,20 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:mbttms/screens/home_screen.dart';
-import 'package:mbttms/screens/register_screen.dart';
-import 'package:mbttms/models/login_model.dart';
-import 'package:mbttms/screens/login_error.dart';
+import 'package:mbttms/screens/login_screen.dart';
+import 'package:mbttms/models/register_model.dart';
 import 'package:mbttms/widgets/custom_widgets.dart';
 
-class LoginScreen extends StatefulWidget {
-  final Login login;
+class RegisterScreen extends StatefulWidget {
+  final Register register;
 
-  LoginScreen({this.login});
+  RegisterScreen({this.register});
 
   @override 
-  _LoginScreenState createState() => _LoginScreenState();
+  _RegisterScreenState createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
   String _username, _password;
   final formKey = GlobalKey<FormState>();
   var response;
@@ -30,9 +29,9 @@ class _LoginScreenState extends State<LoginScreen> {
     return data;
   } 
 
-  Future<String> getUserApi(Map data) async {   
+  Future<String> registerUser(Map data) async {   
     http.Response response = await http.post( 
-      Uri.encodeFull( 'http://192.168.80.1:3000/login' ), 
+      Uri.encodeFull( 'http://192.168.80.1:3000/register' ), 
       headers: {
         "Content-type": "application/json"
       },
@@ -66,9 +65,9 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             SizedBox(height: 60.0),
             Padding(
-              padding: EdgeInsets.only(left: 150.0),
+              padding: EdgeInsets.only(left: 135.0),
               child: Text( 
-                'Login', 
+                'Register', 
                 style: TextStyle(
                   fontSize: 25.0,
                   fontWeight: FontWeight.bold,
@@ -129,16 +128,16 @@ class _LoginScreenState extends State<LoginScreen> {
                           GestureDetector( 
                             onTap: () => {
                               Navigator.push( 
-                                  context, 
-                                  MaterialPageRoute(
-                                    builder: (_) => RegisterScreen( 
-                                      register: register,
-                                    ),
-                                  )
+                                context, 
+                                MaterialPageRoute(
+                                  builder: (_) => LoginScreen( 
+                                    login: login,
+                                  ),
+                                )
                               )
                             },
                             child: Text( 
-                              'Click here to Register',
+                              'Click here to Login',
                               style: TextStyle(
                                 color: Colors.redAccent,
                                 fontSize: 15.0,
@@ -151,32 +150,26 @@ class _LoginScreenState extends State<LoginScreen> {
                             textColor: Colors.white,
                             onPressed: () {   
                               void status() async {
-                                response = await getUserApi(details());
+                                response = await registerUser(details());
                               }
                               status();
 
-                              if( response == "Yes" ) {
-                                Navigator.push( 
+                              if( response == "Success" ) {
+                                /*Navigator.push( 
                                   context, 
                                   MaterialPageRoute(
-                                    builder: (_) => HomeScreen( 
+                                    builder: (_) => RegisterScreen( 
                                       home: home,
                                     ),
                                   )
-                                );
+                                );*/
+                                print(response);
                               }
-                              else if( (response == "WP") || (response == "WU/P") || (response == "Non") ) { 
-                                Navigator.push( 
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => LoginError( 
-                                      res: response,
-                                    ),
-                                  )
-                                );
+                              else if( response == "Fail" ) { 
+                                print(response);
                               }
                             },
-                            child: Text('Login'),
+                            child: Text('Register'),
                           ),
 
                       ],

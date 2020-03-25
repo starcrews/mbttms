@@ -15,7 +15,8 @@ import 'package:mbttms/models/recommendations_model.dart';
 import 'package:mbttms/screens/recommendations_screen.dart';
 import 'package:mbttms/screens/trips_screen.dart';
 import 'package:mbttms/models/trips_models.dart';
-
+import 'package:mbttms/models/login_model.dart';
+import 'package:mbttms/models/register_model.dart';
 
 Flights flights;
 OneFlights flights2;
@@ -25,6 +26,8 @@ Trips trips;
 Homes home;
 Profiles profiles;
 Recommendations recommendations;
+Login login;
+Register register;
 
 List list1() {
   List<IconData> icons;

@@ -2,21 +2,19 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:mbttms/screens/home_screen.dart';
-import 'package:mbttms/screens/register_screen.dart';
 import 'package:mbttms/models/login_model.dart';
-import 'package:mbttms/screens/login_error.dart';
 import 'package:mbttms/widgets/custom_widgets.dart';
 
-class LoginScreen extends StatefulWidget {
-  final Login login;
+class LoginError extends StatefulWidget {
+  final String res;
 
-  LoginScreen({this.login});
+  LoginError({ Key key, this.res }) : super(key : key);
 
   @override 
-  _LoginScreenState createState() => _LoginScreenState();
+  _LoginErrorState createState() => _LoginErrorState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginErrorState extends State<LoginError> {
   String _username, _password;
   final formKey = GlobalKey<FormState>();
   var response;
@@ -42,8 +40,24 @@ class _LoginScreenState extends State<LoginScreen> {
     if(response.statusCode != 200 ) {
       throw (response.body ?? "Invalid Login");
     } else {
+      print(jsonDecode(response.body)['response']);
       return jsonDecode(response.body)['response']; 
     }
+  }
+
+  String res() {
+    String response = widget.res.toString();
+    String rep = "";
+    
+    if( response == "WP" ) { 
+      rep = "Wrong Password";
+    } else if( response == "WU/P" ) {
+      rep =  "Wrong Username/Password";
+    } else if( response == "Non" ) {
+      rep = "The user does not exist";
+    }
+
+    return rep;
   }
 
   @override
@@ -54,29 +68,29 @@ class _LoginScreenState extends State<LoginScreen> {
           padding: EdgeInsets.symmetric(vertical: 30.0),
           children: <Widget>[ 
             Padding(
-              padding: EdgeInsets.only(left: 95.0),
+              padding: EdgeInsets.only(left: 20.0, right: 70.0),
               child: Text( 
-                'MBTTMS', 
+                '             MBTTMS', 
                 style: TextStyle(
-                  fontSize: 40.0,
+                  //fontFamily:,
+                  fontSize: 30.0,
                   fontWeight: FontWeight.bold,
                   color: Colors.redAccent,
                 ),
               ),
             ),
-            SizedBox(height: 60.0),
+            SizedBox(height: 80.0),
             Padding(
-              padding: EdgeInsets.only(left: 150.0),
+              padding: EdgeInsets.only(left: 20.0, right: 70.0),
               child: Text( 
-                'Login', 
+                res(), 
                 style: TextStyle(
-                  fontSize: 25.0,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 15.0,
                   color: Colors.redAccent,
                 ),
               ),
             ),
-            SizedBox(height: 20.0),
+            SizedBox(height: 10.0),
             Padding( 
               padding: EdgeInsets.all(8.0),
               child: Form( 
@@ -114,6 +128,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       validator: (input) => input.contains( "" ) ? "Please enter your password" : null,
+                      //onSaved: (input) => _username = input,
                       onChanged: (String newValue) {
                         setState(() {
                           _password = newValue;
@@ -121,32 +136,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       },
                     ),
                     SizedBox(height: 15.0),
-                    Padding( 
-                    padding: EdgeInsets.symmetric(horizontal: 1.0),                    
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[ 
-                          GestureDetector( 
-                            onTap: () => {
-                              Navigator.push( 
-                                  context, 
-                                  MaterialPageRoute(
-                                    builder: (_) => RegisterScreen( 
-                                      register: register,
-                                    ),
-                                  )
-                              )
-                            },
-                            child: Text( 
-                              'Click here to Register',
-                              style: TextStyle(
-                                color: Colors.redAccent,
-                                fontSize: 15.0,
-                                decoration: TextDecoration.underline,
-                              ),
-                            ),
-                          ),
-                          RaisedButton( 
+                        Padding( 
+                          padding: const EdgeInsets.all(8.0),
+                          child: RaisedButton( 
                             color: Colors.redAccent,
                             textColor: Colors.white,
                             onPressed: () {   
@@ -165,7 +160,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   )
                                 );
                               }
-                              else if( (response == "WP") || (response == "WU/P") || (response == "Non") ) { 
+                              else { 
                                 Navigator.push( 
                                   context,
                                   MaterialPageRoute(
@@ -178,9 +173,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             },
                             child: Text('Login'),
                           ),
-
+                        )
                       ],
-                    ),
                     ),
                   ],
                 ),
