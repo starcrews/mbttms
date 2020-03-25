@@ -17,6 +17,7 @@ app.use(bodyParser.raw());
 mongoose.connect( "mongodb://localhost:27017/mbttms", { useUnifiedTopology: true, useNewUrlParser:true, useCreateIndex: true } );
 
 app.use( "/login", loginRouter );
+app.use( "/register", registerRouter );
 
 app.get( "/", (req, res) => {
     res.sendStatus(200);
